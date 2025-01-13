@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { ZERO_ADDRESS } from "@/lib/constants";
+import { Card, CardContent, CardHeader } from "./ui/card";
 
 export function BridgeForm(props: { isEnabled: boolean }) {
   const formSchema = z.object({
@@ -37,53 +38,58 @@ export function BridgeForm(props: { isEnabled: boolean }) {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>USDC Amount</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="0"
-                  type="number"
-                  {...field}
-                  disabled={!props.isEnabled}
-                />
-              </FormControl>
-              <FormDescription>
-                Amount of USDC you want to bridge to the Recipient Address
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="recipientAddress"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Recipient Address</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={ZERO_ADDRESS}
-                  {...field}
-                  disabled={!props.isEnabled}
-                />
-              </FormControl>
-              <FormDescription>
-                Recipient address in Ethereum Sepolia (Testnet)
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={!props.isEnabled}>
-          Bridge
-        </Button>
-      </form>
-    </Form>
+    <Card>
+      <CardHeader />
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>USDC Amount</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="0"
+                      type="number"
+                      {...field}
+                      disabled={!props.isEnabled}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Amount of USDC you want to bridge to the Recipient Address
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="recipientAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Recipient Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={ZERO_ADDRESS}
+                      {...field}
+                      disabled={!props.isEnabled}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Recipient address in Ethereum Sepolia (Testnet)
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" disabled={!props.isEnabled}>
+              Bridge
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
