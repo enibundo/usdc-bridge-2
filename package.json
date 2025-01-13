@@ -12,7 +12,6 @@
     "@cosmos-kit/keplr": "^2.14.3",
     "@cosmos-kit/react": "^2.21.2",
     "@hookform/resolvers": "^3.10.0",
-    "@interchain-ui/react": "^1.26.1",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",

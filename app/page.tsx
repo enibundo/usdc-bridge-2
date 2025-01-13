@@ -7,16 +7,14 @@ import { wallets } from "@cosmos-kit/keplr";
 import { SignerOptions } from "cosmos-kit";
 
 export default function Page() {
+  console.log("CHAINS length = " + chains.length);
+  console.log("WALLETS length = " + wallets.length);
   const signerOptions: SignerOptions = {};
-
-  const keplerExtensionWallet = wallets.filter(
-    (x) => x.walletInfo.name === "keplr-extension"
-  );
 
   return (
     <ChainProvider
       chains={chains}
-      wallets={keplerExtensionWallet}
+      wallets={wallets}
       assetLists={assets}
       walletConnectOptions={{
         signClient: {
