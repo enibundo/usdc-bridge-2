@@ -1,7 +1,21 @@
-export function WalletInformation() {
+import { WalletConnection } from "./WalletConnection";
+
+export function WalletInformation(props: {
+  isWalletConnected: boolean;
+  address: string | undefined;
+}) {
   return (
-    <div>
-      <h1>Wallet Status</h1>
-    </div>
+    <>
+      <span>
+        <WalletConnection />
+
+        {props.isWalletConnected && props.address !== undefined && (
+          <>
+            {" // "}
+            {props.address}
+          </>
+        )}
+      </span>
+    </>
   );
 }

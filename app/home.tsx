@@ -1,72 +1,50 @@
 "use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useWalletClient, useChain } from "@cosmos-kit/react";
-import { Button } from "@/components/ui/button";
+import { BridgeForm } from "@/components/BridgeForm";
+import { useChain } from "@cosmos-kit/react";
+import { WalletConnection } from "@/components/WalletConnection";
+import { WalletStatus } from "cosmos-kit";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { WalletInformation } from "@/components/WalletInformation";
 
 export default function Home() {
-  const formSchema = z.object({
-    username: z.string().min(2).max(50),
-  });
+  const { status, address } = useChain("nobletestnet");
+  const [isWalletConnected, setIsWalletConnected] = useState(
+    status === WalletStatus.Connected
+  );
 
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-    },
-  });
-
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
-  const { getSigningStargateClient, address, status, getRpcEndpoint } =
-    useChain("nobletestnet");
-  const { client } = useWalletClient();
-
-  console.log("address = " + address);
+  useEffect(() => {
+    setIsWalletConnected(status === WalletStatus.Connected);
+  }, [status]);
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <div>Status: </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-        </Form>
+        <WalletInformation
+          isWalletConnected={isWalletConnected}
+          address={address}
+        />
+
+        <Separator />
+
+        <Card>
+          <CardHeader />
+          <CardContent>
+            <BridgeForm isEnabled={isWalletConnected} />
+          </CardContent>
+        </Card>
       </main>
+
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         Simple USDC Bridge + Keplr Wallet Connection / @enibundo
       </footer>

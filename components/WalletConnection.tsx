@@ -12,8 +12,9 @@ export function WalletConnection() {
         <Button
           size={"sm"}
           variant="destructive"
-          onClick={() => {
-            disconnect();
+          onClick={async (e) => {
+            e.preventDefault();
+            await disconnect();
           }}
         >
           Disconnect Wallet
@@ -21,8 +22,9 @@ export function WalletConnection() {
       ) : (
         <Button
           size={"sm"}
-          onClick={() => {
-            connect();
+          onClick={async (e) => {
+            e.preventDefault();
+            await connect();
           }}
         >
           Connect Wallet
