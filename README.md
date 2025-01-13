@@ -1,7 +1,4 @@
-This is re visit of the usdc-bridge built [here](https://github.com/enibundo/usdc-bridge). The intitial version was done using out dated libraries. This one improves ui functionalities and leverages cosmos-kit integrations.
+💡 This is revisit of the usdc-bridge built initially [here](https://github.com/enibundo/usdc-bridge). The first version was done using outdated libraries.
+The new version uses `cosmos-kit` among other dependencies.
 
-TODO:
-
-- show final version of ui
-- show tx on noble that burns usdc
-- show tx on sepolia that mints usdc
+![Alt text](images/disconnected-1.png "Before connecting")
