@@ -1,18 +1,26 @@
 import {
   CIRCLE_CCTP_DEPOSIT_FOR_BURN,
+  NOBLE_TESTNET_RPC,
   USDC_DENOM,
   USDC_MULTIPLIER,
 } from "@/lib/constants";
-import { SigningStargateClient } from "@cosmjs/stargate";
+import { useChainWallet } from "@cosmos-kit/react";
 import { useMutation } from "@tanstack/react-query";
+import { SigningStargateClient } from "@cosmjs/stargate";
+import { Registry, GeneratedType } from "@cosmjs/proto-signing";
+import { MsgDepositForBurn } from "@/generated/tx";
 
-export const useUsdcBridgeMutation = ({
-  signingClient,
-}: {
-  signingClient: SigningStargateClient | undefined;
-}) =>
-  useMutation({
-    mutationKey: [signingClient],
+function createDefaultRegistry(): Registry {
+  const cctpTypes: ReadonlyArray<[string, GeneratedType]> = [
+    [CIRCLE_CCTP_DEPOSIT_FOR_BURN, MsgDepositForBurn],
+  ];
+  return new Registry(cctpTypes);
+}
+
+export const useUsdcBridgeMutation = () => {
+  const chainWalletContext = useChainWallet("nobletestnet", "keplr-extension");
+  return useMutation({
+    mutationKey: ["usdcBridge"],
     mutationFn: async ({
       address,
       amount,
@@ -22,6 +30,15 @@ export const useUsdcBridgeMutation = ({
       amount: number;
       recipient: string;
     }) => {
+      const offlineSigner = chainWalletContext.getOfflineSignerDirect();
+      const clientSigner = await SigningStargateClient.connectWithSigner(
+        NOBLE_TESTNET_RPC,
+        offlineSigner!,
+        {
+          registry: createDefaultRegistry() as any,
+        }
+      );
+
       const rawMintRecipient = recipient;
       const cleanedMintRecipient = rawMintRecipient.replace(/^0x/, "");
       const zeroesNeeded = 64 - cleanedMintRecipient.length;
@@ -54,7 +71,7 @@ export const useUsdcBridgeMutation = ({
       const memo = "";
 
       try {
-        const result = await signingClient?.signAndBroadcast(
+        const result = await clientSigner?.signAndBroadcast(
           address,
           [msg],
           fee,
@@ -65,3 +82,4 @@ export const useUsdcBridgeMutation = ({
       }
     },
   });
+};

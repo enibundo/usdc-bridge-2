@@ -6,12 +6,14 @@ import { WalletStatus } from "cosmos-kit";
 import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { WalletInformation } from "@/components/WalletInformation";
+import { useUsdcBridgeMutation } from "@/hooks/useUsdcBridgeMutation";
 
 export default function Home() {
   const { status, address } = useChain("nobletestnet");
   const [isWalletConnected, setIsWalletConnected] = useState(
     status === WalletStatus.Connected
   );
+  const { mutate: mutateUsdcBridge } = useUsdcBridgeMutation();
 
   useEffect(() => {
     setIsWalletConnected(status === WalletStatus.Connected);
@@ -23,7 +25,18 @@ export default function Home() {
         <WalletInformation isWalletConnected={isWalletConnected} />
         <Separator />
 
-        <BridgeForm isEnabled={isWalletConnected} />
+        <BridgeForm
+          isEnabled={isWalletConnected}
+          onBridge={async ({ amount, recipientAddress }) => {
+            if (address) {
+              mutateUsdcBridge({
+                address,
+                amount,
+                recipient: recipientAddress,
+              });
+            }
+          }}
+        />
       </main>
 
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">

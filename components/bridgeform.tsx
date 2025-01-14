@@ -15,7 +15,16 @@ import { Button } from "@/components/ui/button";
 import { ZERO_ADDRESS } from "@/lib/constants";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
-export function BridgeForm(props: { isEnabled: boolean }) {
+export function BridgeForm(props: {
+  isEnabled: boolean;
+  onBridge: ({
+    amount,
+    recipientAddress,
+  }: {
+    amount: number;
+    recipientAddress: string;
+  }) => Promise<void>;
+}) {
   const formSchema = z.object({
     amount: z.coerce.number().positive({
       message: "Amount must be positive number.",
@@ -33,9 +42,12 @@ export function BridgeForm(props: { isEnabled: boolean }) {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await props.onBridge({
+      amount: values.amount,
+      recipientAddress: values.recipientAddress,
+    });
+  };
 
   return (
     <Card>
