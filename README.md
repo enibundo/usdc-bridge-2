@@ -5,7 +5,7 @@ This application demonstrates bridging USDC from the Noble Testnet to Ethereum S
 Key Features
 
 1. Keplr Wallet Integration:
-   - Connect your Keplr wallet to interact with the Noble Testnet.
+   - Connect and disconnect with kepler wallet to visualise balance.
 2. CCTP (Cross-Chain Transfer Protocol):
    - Leverages Circle’s CCTP to automate USDC burn and mint mechanics during the bridging process.
 3. Transaction Broadcasting:
