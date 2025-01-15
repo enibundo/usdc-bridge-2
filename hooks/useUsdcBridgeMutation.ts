@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, GeneratedType } from "@cosmjs/proto-signing";
 import { MsgDepositForBurn } from "@/generated/tx";
+import { DeliverTxResponse } from "@cosmjs/stargate";
 
 function createDefaultRegistry(): Registry {
   const cctpTypes: ReadonlyArray<[string, GeneratedType]> = [
@@ -17,7 +18,13 @@ function createDefaultRegistry(): Registry {
   return new Registry(cctpTypes);
 }
 
-export const useUsdcBridgeMutation = () => {
+export const useUsdcBridgeMutation = ({
+  onBroadcastFinished,
+  onBroadcastError,
+}: {
+  onBroadcastFinished: (deliverTxResponse: DeliverTxResponse) => void;
+  onBroadcastError: (error: string) => void;
+}) => {
   const chainWalletContext = useChainWallet("nobletestnet", "keplr-extension");
   return useMutation({
     mutationKey: ["usdcBridge"],
@@ -71,14 +78,17 @@ export const useUsdcBridgeMutation = () => {
       const memo = "";
 
       try {
-        const result = await clientSigner?.signAndBroadcast(
+        const deliverTxResponse = await clientSigner?.signAndBroadcast(
           address,
           [msg],
           fee,
           memo
         );
-      } catch (e) {
+
+        onBroadcastFinished(deliverTxResponse);
+      } catch (e: any) {
         console.log(e);
+        onBroadcastError(e.toString());
       }
     },
   });
