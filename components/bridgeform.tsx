@@ -14,9 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { ZERO_ADDRESS } from "@/lib/constants";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import Spinner from "./ui/spinner";
 
 export function BridgeForm(props: {
   isEnabled: boolean;
+  isLoading: boolean;
   onBridge: ({
     amount,
     recipientAddress,
@@ -66,7 +68,7 @@ export function BridgeForm(props: {
                       placeholder="0"
                       type="number"
                       {...field}
-                      disabled={!props.isEnabled}
+                      disabled={!props.isEnabled || props.isLoading}
                     />
                   </FormControl>
                   <FormDescription>
@@ -86,7 +88,7 @@ export function BridgeForm(props: {
                     <Input
                       placeholder={ZERO_ADDRESS}
                       {...field}
-                      disabled={!props.isEnabled}
+                      disabled={!props.isEnabled || props.isLoading}
                     />
                   </FormControl>
                   <FormDescription>
@@ -96,7 +98,11 @@ export function BridgeForm(props: {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={!props.isEnabled}>
+            <Button
+              type="submit"
+              disabled={!props.isEnabled || props.isLoading}
+            >
+              {props.isLoading && <Spinner />}
               Bridge
             </Button>
           </form>

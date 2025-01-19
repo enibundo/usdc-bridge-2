@@ -17,6 +17,7 @@ export default function Home() {
     status === WalletStatus.Connected
   );
   const [bridgeLogs, setBridgeLogs] = useState<BridgeResult[]>([]);
+  const [isPendingTransaction, setIsPendingTransaction] = useState(false);
 
   const { mutate: mutateUsdcBridge } = useUsdcBridgeMutation({
     onBroadcastFinished: (txResult: DeliverTxResponse) => {
@@ -26,6 +27,7 @@ export default function Home() {
           txHash: txResult.transactionHash,
         })
       );
+      setIsPendingTransaction(false);
     },
     onBroadcastError: (message: string) => {
       setBridgeLogs(
@@ -34,6 +36,7 @@ export default function Home() {
           message,
         })
       );
+      setIsPendingTransaction(false);
     },
   });
 
@@ -49,9 +52,11 @@ export default function Home() {
         <Separator />
 
         <BridgeForm
+          isLoading={isPendingTransaction}
           isEnabled={isWalletConnected}
           onBridge={async ({ amount, recipientAddress }) => {
             if (address) {
+              setIsPendingTransaction(true);
               mutateUsdcBridge({
                 address,
                 amount,
