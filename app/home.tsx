@@ -9,26 +9,31 @@ import { WalletInformation } from "@/components/WalletInformation";
 import { useUsdcBridgeMutation } from "@/hooks/useUsdcBridgeMutation";
 import { DeliverTxResponse } from "@cosmjs/stargate";
 import { BridgeLog } from "@/components/BridgeLog";
+import { BridgeResult } from "@/model/BridgeResult";
 
 export default function Home() {
   const { status, address } = useChain("nobletestnet");
   const [isWalletConnected, setIsWalletConnected] = useState(
     status === WalletStatus.Connected
   );
-  const [bridgeLogs, setBridgeLogs] = useState<string[]>([]);
+  const [bridgeLogs, setBridgeLogs] = useState<BridgeResult[]>([]);
 
   const { mutate: mutateUsdcBridge } = useUsdcBridgeMutation({
     onBroadcastFinished: (txResult: DeliverTxResponse) => {
-      console.log(
-        "Bridge successful! : ",
-        JSON.stringify(txResult.transactionHash)
-      );
       setBridgeLogs(
-        bridgeLogs.concat(`Bridge successful! : ${txResult.transactionHash}`)
+        bridgeLogs.concat({
+          type: "successful",
+          txHash: txResult.transactionHash,
+        })
       );
     },
     onBroadcastError: (message: string) => {
-      setBridgeLogs(bridgeLogs.concat(`Bridge Error! : ${message}`));
+      setBridgeLogs(
+        bridgeLogs.concat({
+          type: "error",
+          message,
+        })
+      );
     },
   });
 
