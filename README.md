@@ -29,3 +29,7 @@ This project provides a foundational understanding of cross-chain mechanics, blo
 ![Alt text](images/connect-wallet.gif "Before connecting")
 
 <center>Connecting with kepler to see current USDC balance</center>
+
+![Alt text](images/on-bridge.gif "Before connecting")
+
+<center>Connecting with kepler to see current USDC balance</center>
