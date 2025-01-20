@@ -32,4 +32,4 @@ This project provides a foundational understanding of cross-chain mechanics, blo
 
 ![Alt text](images/on-bridge.gif "Before connecting")
 
-<center>Connecting with kepler to see current USDC balance</center>
+<center>Broadcasting transaction to noble testnet</center>
